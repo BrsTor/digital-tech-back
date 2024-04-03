@@ -7,17 +7,13 @@ export class CreatePostDto {
     @IsNotEmpty()
     message: string;
 
-    @IsDate()
-    @IsNotEmpty()
-    created_at: Date;
-
     @IsString()
     @IsNotEmpty()
     location: string;
 
     @IsString()
-    @IsNotEmpty()
     @IsIn(status)
+    @IsOptional()
     status: string;
 
     @IsString()
