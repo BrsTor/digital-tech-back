@@ -18,7 +18,6 @@ export class PostsController {
     @Post()
     @Serialize(PostDto)
     createPost(@Body() body: CreatePostDto, @CurrentUser() user: User) {
-        /* TODO - Relationship with User */
         return this.postsService.create(body, user);
     }
 
@@ -81,5 +80,15 @@ export class PostsController {
             throw new BadRequestException("post doesn't belong to that user");
         }
         return this.postsService.delete(post);
+    }
+
+    @Post(':id/like')
+    likePost(@Param('id') id: number, @CurrentUser() user: User) {
+        return this.postsService.likePost(id, user);
+    }
+
+    @Delete(':id/like')
+    unlikePost(@Param('id') id: number, @CurrentUser() user: User) {
+        return this.postsService.unlikePost(id, user);
     }
 }

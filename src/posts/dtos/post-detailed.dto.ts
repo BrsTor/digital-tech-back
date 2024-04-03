@@ -24,4 +24,7 @@ export class PostDetailedDto {
     @Expose()
     author: User;
 
+    @Transform(({ obj }) => obj.likes.map(user => user.username))
+    @Expose()
+    likes: Array<User>;
 }

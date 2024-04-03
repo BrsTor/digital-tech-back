@@ -12,7 +12,6 @@ export class PostsService {
     constructor(@InjectRepository(Post) private repo: Repository<Post>) { }
 
     create(postDto: CreatePostDto, user: User) {
-        /* TODO - Relationship with User */
         const post = this.repo.create(postDto);
         post.author = user;
         return this.repo.save(post);
@@ -31,7 +30,7 @@ export class PostsService {
 
     async findOneById(id: number) {
         const post = await this.repo.findOne({
-            relations: ['author'],
+            relations: ['author', 'likes'],
             where: { id }
         })
         return post
@@ -39,15 +38,15 @@ export class PostsService {
 
     async find() {
         const post = await this.repo.find({
-            relations: ['author'],
-            where: {status: Not('deleted')}
+            relations: ['author', 'likes'],
+            where: { status: Not('deleted') }
         })
         return post
     }
 
     async findPublished() {
         const post = await this.repo.find({
-            relations: ['author'],
+            relations: ['author', 'likes'],
             where: { status: 'published' },
             order: { created_at: "DESC" }
         })
@@ -57,7 +56,7 @@ export class PostsService {
     @UseGuards(AdminGuard)
     async findDrafted() {
         const post = await this.repo.find({
-            relations: ['author'],
+            relations: ['author', 'likes'],
             where: { status: 'drafted' },
             order: { created_at: "ASC" }
         })
@@ -67,5 +66,40 @@ export class PostsService {
     delete(post: Post) {
         post.status = 'deleted'
         return this.repo.save(post)
+    }
+
+    async likePost(id: number, user: User): Promise<Post> {
+        const post = await this.repo.findOne({
+            relations: ['author', 'likes'],
+            where: { id }
+        });
+
+        if (!post) {
+            throw new NotFoundException('post not found')
+        }
+
+        // Check if the user has already liked the post
+        const userIndex = post.likes.findIndex((u) => u.id === user.id);
+        if (userIndex === -1) {
+            post.likes.push(user);
+        }
+
+        return this.repo.save(post);
+    }
+
+    async unlikePost(id: number, user: User): Promise<Post> {
+        const post = await this.repo.findOne({
+            relations: ['author', 'likes'],
+            where: { id }
+        });
+
+        if (!post) {
+            throw new Error('Post not found');
+        }
+
+        // Remove user from the likes array
+        post.likes = post.likes.filter((u) => u.id !== user.id);
+
+        return this.repo.save(post);
     }
 }

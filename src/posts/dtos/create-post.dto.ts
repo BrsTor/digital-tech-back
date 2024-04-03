@@ -20,5 +20,4 @@ export class CreatePostDto {
     @IsOptional()
     image: string;
 
-    /* TODO - Relationship with User */
 }
