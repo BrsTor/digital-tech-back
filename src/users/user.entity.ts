@@ -4,7 +4,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
-
+export const roles = ['admin', 'user']
 
 @Entity()
 export class User {
@@ -17,7 +17,7 @@ export class User {
     @Column()
     surname: string;
 
-    @Column({ unique: true })
+    @Column()
     username: string;
 
     @Column({ default: 'user' })
