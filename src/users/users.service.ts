@@ -12,4 +12,13 @@ export class UsersService {
         const user = this.repo.create({ name, surname, username, role, avatar });
         return this.repo.save(user);
     }
+
+    findOneById(id: number) {
+        return this.repo.findOneBy({ id });
+    }
+
+    findOneByUsername(username: string) {
+        return this.repo.findOneBy({ username })
+    }
+
 }
