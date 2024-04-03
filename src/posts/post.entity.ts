@@ -4,7 +4,9 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-    ManyToOne
+    ManyToOne,
+    ManyToMany,
+    JoinTable
 } from 'typeorm';
 
 export const status = ['drafted', 'deleted', 'published']
@@ -29,7 +31,10 @@ export class Post {
     @Column({ nullable: true })
     image: string;
 
-    /* TODO - Relationship with User */
     @ManyToOne(() => User, (user) => user.posts)
     author: User
+
+    @ManyToMany(() => User)
+    @JoinTable()
+    likes: User[];
 }
