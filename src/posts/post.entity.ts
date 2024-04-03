@@ -1,8 +1,10 @@
+import { User } from 'src/users/user.entity';
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
+    ManyToOne
 } from 'typeorm';
 
 export const status = ['drafted', 'deleted', 'published']
@@ -28,4 +30,6 @@ export class Post {
     image: string;
 
     /* TODO - Relationship with User */
+    @ManyToOne(() => User, (user) => user.posts)
+    author: User
 }

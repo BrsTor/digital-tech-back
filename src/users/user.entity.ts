@@ -1,7 +1,9 @@
+import { Post } from 'src/posts/post.entity';
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
+    OneToMany
 } from 'typeorm';
 
 export const roles = ['admin', 'user']
@@ -25,4 +27,7 @@ export class User {
 
     @Column({ nullable: true })
     avatar: string;
+
+    @OneToMany(() => Post, (post) => post.author)
+    posts: Post[];
 }
