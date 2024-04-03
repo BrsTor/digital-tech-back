@@ -20,7 +20,7 @@ export class AuthService {
 
     async signIn(username: string) {
         //Check if user exist
-        const user = this.usersService.findOneByUsername(username)
+        const user = await this.usersService.findOneByUsername(username)
 
         //If user doesn't exist throw BadRequestException
         if (!user) {
