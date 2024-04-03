@@ -14,7 +14,7 @@ export class UsersController {
 
     @Post('/signup')
     async createUser(@Body() body: CreateUserDto, @Session() session: any) {
-        const user = await this.authService.signUp(body.name, body.surname, body.username, body.role, body.avatar);
+        const user = await this.authService.signUp(body);
         session.userId = user.id;
         return user;
     }
