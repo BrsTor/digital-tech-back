@@ -2,19 +2,20 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
+    CreateDateColumn,
 } from 'typeorm';
 
 export const status = ['drafted', 'deleted', 'published']
 
 @Entity()
-export class User {
+export class Post {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
     message: string;
 
-    @Column()
+    @CreateDateColumn()
     created_at: Date;
 
     @Column()
