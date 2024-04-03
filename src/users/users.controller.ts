@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Get, Param, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, NotFoundException, Query, Session, HttpCode } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
 import { SignInUserDto } from './dtos/signin-user.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class UsersController {
@@ -10,15 +12,32 @@ export class UsersController {
     constructor(private usersService: UsersService, private authService: AuthService) { }
 
     @Post('/signup')
-    async createUser(@Body() body: CreateUserDto) {
+    async createUser(@Body() body: CreateUserDto, @Session() session: any) {
         const user = await this.authService.signUp(body.name, body.surname, body.username, body.role, body.avatar);
+        session.userId = user.id;
         return user;
     }
 
     @Post('/signin')
-    async signIn(@Body() body: SignInUserDto) {
+    async signIn(@Body() body: SignInUserDto, @Session() session: any) {
         const user = await this.authService.signIn(body.username);
+        session.userId = user.id;
         return user;
+    }
+
+    @Post('/signout')
+    @HttpCode(200)
+    signOut(@Session() session: any) {
+        if (!session.userId) {
+            throw new NotFoundException('session cookie not found')
+        }
+        session.userId = null;
+        return true;
+    }
+
+    @Get('/whoami')
+    whoAmI(@CurrentUser() user: User) {
+        return user
     }
 
     @Get('/:id')
