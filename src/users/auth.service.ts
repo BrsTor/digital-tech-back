@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 
@@ -25,7 +25,7 @@ export class AuthService {
 
         //If user doesn't exist throw BadRequestException
         if (!user) {
-            throw new BadRequestException('username do not exist');
+            throw new NotFoundException('username do not exist');
         }
         return user;
     }
