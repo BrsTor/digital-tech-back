@@ -6,6 +6,12 @@ const cookieSession = require('cookie-session');
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
+    app.enableCors({ 
+        origin: 'http://localhost:4200', 
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true,
+    })
+
     /* TODO - Refactor the cookie-session */
     app.use(cookieSession({
         keys: ['hfgklhfgkh']
@@ -16,6 +22,7 @@ async function bootstrap() {
             whitelist: true
         })
     )
+
     await app.listen(3000);
 }
 bootstrap();
